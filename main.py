@@ -47,17 +47,36 @@ def login():
             elif row[3] == 'admin':
                 click.echo('signup successfully')
                 comment = click.prompt('what to do: v=view comments, d=delete comments')
-                comnt = Comment(comment, email)
-                comnt.create_comment()
-                click.echo('Your previous comments')
-                curs = conn.cursor()
-                query = 'SELECT * FROM comments'
-                curs.execute(query,(email,))
-                row = curs.fetchall()
-                com_id = 0
-                for u in row:
-                    com_id =com_id+1
-                    click.echo('{}st {}'.format(com_id,u[1]))
+                if comment == 'v':
+                    comnt = Comment(comment, email)
+                    comnt.create_comment()
+                    click.echo('previous comments')
+                    curs = conn.cursor()
+                    query = 'SELECT * FROM comments'
+                    curs.execute(query,(email,))
+                    row = curs.fetchall()
+                    com_id = 0
+                    for u in row:
+                        com_id =com_id+1
+                        click.echo('{}st {}'.format(com_id,u[1]))
+                elif comment == 'd':
+                    cm_id = click.prompt('Enter the id of comment to delete')
+                    curs = conn.cursor()
+                    query=('Delete from comments where id = %s')
+                    curs.execute(query, (cm_id,))
+                    conn.commit()
+                    click.echo('comment deleted')
+                    curs = conn.cursor()
+                    query = 'SELECT * FROM comments'
+                    curs.execute(query,(email,))
+                    row = curs.fetchall()
+                    com_id = 0
+                    for u in row:
+                        com_id =com_id+1
+                        click.echo('{}st {}'.format(com_id,u[1]))
+
+
+
     else:
         click.echo('Please register')
 
