@@ -24,15 +24,33 @@ class Admin(User):
         super().__init__(email, password)
         self.role = role
 
-class Comments:
+class Comment():
+    """Creates a user comment."""
 
-    def __init__(self, comment):
+    def __init__(self, comment, author):
+        self.connection = psycopg2.connect(
+                host="localhost", database="andela", user="postgres", password="leah")
         self.comment = comment
-        self.conn  = psycopg2.connect(host="localhost",database="andela", user="postgres", password="leah")
+        self.author = author
 
-    def add_comment(self):
-        curs = self.conn.cursor()
-        query = 'INSERT INTO cli_coment(comment) VALUES(%s)'
-        curs.execute(query, (self.comment,))
-        self.conn.commit()
-        self.conn.close()
+    def create_comment(self):
+
+        cursor = self.connection.cursor()
+        query = "INSERT INTO comments (comments, email) \
+                VALUES ('{}', '{}')".format(self.comment, self.author)
+        cursor.execute(query)
+        self.connection.commit()
+        self.connection.close()
+
+    # def create_reply(self, comment, author):
+    #     cursor =self.connection.cursor()
+    #     try:
+    #         query = "INSERT INTO reply (comment, username, parent) \
+    #                  VALUES ('{}', '{}', '{}')".\
+    #                         format(comment, author, parent_id)
+    #         cursor.execute(query)
+    #         self.connection.commit()
+    #         self.connection.close()
+    #     except Exception as e:
+    #         return "Error: {}".format(e)
+
