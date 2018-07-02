@@ -1,4 +1,5 @@
 import click
+import psycopg2
 
 from models import User
 
@@ -12,16 +13,23 @@ def register():
     email = click.prompt('Enter your user name')
     password = click.prompt('Enter your password')
     user = User(email, password)
-    user.save()
+    user.register_user()
     click.echo('Registerd as {} password {}'.format(email, password))
 
 @click.command()
 def login():
     """Logins in registerd user"""
-    # email = click.prompt('Enter your user name')
-    # password = click.prompt('Enter your password')
-    # check_email = User.get_by_email(email=email)
-    print(User.dbuser_details)
+    email = click.prompt('Enter your user name')
+    password = click.prompt('Enter your password')
+    conn  = psycopg2.connect(host="localhost",database="andela", user="postgres", password="leah")
+    curs = conn.cursor()
+    query = 'SELECT * FROM cli WHERE email=%s'
+    curs.execute(query, (email,))
+    row = curs.fetchone()
+    if row:
+        pass
+    else:
+        click.echo('Please register')
 
 
 auth.add_command(register)

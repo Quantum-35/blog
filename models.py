@@ -1,24 +1,18 @@
 
+import psycopg2
 class User:
-    dbuser_details=[]
     def __init__(self, email, password, role='user'):
         self.email = email
         self.password = password
         self.role = role
+        self.conn  = psycopg2.connect(host="localhost",database="andela", user="postgres", password="leah")
 
-    @staticmethod
-    def get_by_email(email):
-        check_email = next(filter(lambda x: x['email'] == email, User.dbuser_details), None)
-        if check_email:
-            return check_email
-
-    def save(self):
-        user_details = {}
-        user_details['email'] = self.email
-        user_details['password'] = self.password
-        user_details['role'] = self.role
-        User.dbuser_details.append(user_details)
-        print(User.dbuser_details)
+    def register_user(self):
+        curs = self.conn.cursor()
+        query = 'INSERT INTO cli(email,password, role) VALUES(%s, %s, %s)'
+        curs.execute(query, (self.email, self.password, self.role))
+        self.conn.commit()
+        self.conn.close()
 
 class Moderator(User):
     def __init__(self, email, password, role='moderator'):
