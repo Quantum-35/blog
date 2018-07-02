@@ -26,6 +26,13 @@ class Admin(User):
 
 class Comments:
 
-    def __init__(self, message, role):
-        self.message = message
-        self.role = role
+    def __init__(self, comment):
+        self.comment = comment
+        self.conn  = psycopg2.connect(host="localhost",database="andela", user="postgres", password="leah")
+
+    def add_comment(self):
+        curs = self.conn.cursor()
+        query = 'INSERT INTO cli_coment(comment) VALUES(%s)'
+        curs.execute(query, (self.comment,))
+        self.conn.commit()
+        self.conn.close()

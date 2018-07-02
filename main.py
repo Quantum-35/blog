@@ -1,7 +1,7 @@
 import click
 import psycopg2
 
-from models import User
+from models import User, Comments
 
 @click.group()
 def auth():
@@ -27,7 +27,22 @@ def login():
     curs.execute(query, (email,))
     row = curs.fetchone()
     if row:
-        pass
+        if password != row[2]:
+            click.echo('wrong password')
+        else:
+            click.echo('signup successfully')
+            comment = click.prompt('make comment: ')
+            comnt = Comments(comment)
+            comnt.add_comment()
+            click.echo('Your previous comments')
+            curs = conn.cursor()
+            query = 'SELECT * FROM cli_coment'
+            curs.execute(query)
+            row = curs.fetchall()
+            com_id = 0
+            for u in row:
+                com_id =com_id+1
+                click.echo('{}st {}'.format(com_id,u[1]))
     else:
         click.echo('Please register')
 
