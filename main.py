@@ -9,6 +9,7 @@ def auth():
     password = click.prompt('Enter your password')
     user = User(email, password)
     user.save()
+    click.echo('Registerd as {} password {}'.format(email, password))
 
 if __name__ == '__main__':
     auth()
