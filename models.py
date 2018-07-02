@@ -6,6 +6,12 @@ class User:
         self.password = password
         self.role = role
 
+    @staticmethod
+    def get_by_email(email):
+        check_email = next(filter(lambda x: x['email'] == email, User.dbuser_details), None)
+        if check_email:
+            return check_email
+
     def save(self):
         user_details = {}
         user_details['email'] = self.email
