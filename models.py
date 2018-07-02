@@ -42,15 +42,14 @@ class Comment():
         self.connection.commit()
         self.connection.close()
 
-    # def create_reply(self, comment, author):
-    #     cursor =self.connection.cursor()
-    #     try:
-    #         query = "INSERT INTO reply (comment, username, parent) \
-    #                  VALUES ('{}', '{}', '{}')".\
-    #                         format(comment, author, parent_id)
-    #         cursor.execute(query)
-    #         self.connection.commit()
-    #         self.connection.close()
-    #     except Exception as e:
-    #         return "Error: {}".format(e)
-
+    def create_reply(self, parent_id):
+        cursor =self.connection.cursor()
+        try:
+            query = "INSERT INTO reply (comment, username, parent) \
+                     VALUES ('{}', '{}', '{}')".\
+                            format(self.comment, self.author, parent_id)
+            cursor.execute(query)
+            self.connection.commit()
+            self.connection.close()
+        except Exception as e:
+            return "Error: {}".format(e)
